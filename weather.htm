@@ -1,0 +1,55 @@
+<!doctype html>
+<html ng-app='weatherApp'>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<script src="jquery.js"></script>
+   		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.js"></script>
+		<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.3.2.js"></script>
+		<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+
+		<script src="main.js"></script>
+
+    		<link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="mystyle.css">
+
+	</head>
+	<body ng-controller='weather'>
+	
+	<div class="text-center" style="margin-top: 10px">
+		<input type="text" ng-model="asyncSelected" placeholder="Enter City Here" 
+			uib-typeahead= "address for address in getLocationUI($viewValue)" 
+			typeahead-loading="loadingLocations"
+			typeahead-no-results="noResults"
+			class="form-control text-center">
+
+		<i ng-show="loadingLocations"></i>
+		<div ng-show="noResults">
+			<i>No Results Found</i>
+		</div>
+	
+		<a href="" ng-click='getLocation()' class="btn text-center">Get Location</a>
+	</div>
+	
+	<div class="row">	
+		<div id="YMapsID" style="width:66%;height:400px" class="col-md-8"></div>
+
+		<div class="col-md-4">
+		<table class="table table-striped text-center">
+				<td><span>#</span></td>
+				<td><a href="" ng-click="order('formatted_address')">Location</a></td>
+				<td><a href="" ng-click="order('weather.temp')">Current temperature</a></td>
+				<td><span>Remove</span></td>
+			<tr ng-repeat="city in cities | orderBy:predicate:reverse">
+				<td><span>{{$index + 1}}</span></td>
+				<td><span>{{city.formatted_address}}</span></td>
+				<td><span>{{city.weather.temp}}&nbsp&degC</span></td>
+				<td><a href="" ng-click='remove(city)' class="btn btn-default text-center">x</a></td>
+			</tr>
+		</table>
+		</div>
+	</div>
+</body>
+</html>
+
