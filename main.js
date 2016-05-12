@@ -3,15 +3,15 @@ var myApp = angular.module('weatherApp', ['ngAnimate', 'ui.bootstrap']);
 myApp.controller('weather', function($scope, $http) {
 
 
-	$scope.cities = new Array ();	// массив выбранных городов
+	$scope.cities = new Array ();	// РјР°СЃСЃРёРІ РІС‹Р±СЂР°РЅРЅС‹С… РіРѕСЂРѕРґРѕРІ
 	
-	// создаем карту
+	// СЃРѕР·РґР°РµРј РєР°СЂС‚Сѓ
 	var map;
 	ymaps.ready(function () { 
     	map = new ymaps.Map("YMapsID", {
     		center: [44.54, 34.28],
     		zoom: 4,
-		controls: []
+		controls: ["zoomControl"]
     		});
   	});
 
@@ -30,25 +30,25 @@ myApp.controller('weather', function($scope, $http) {
 		});
 	};
 
-	// функция вызыва города
+	// С„СѓРЅРєС†РёСЏ РІС‹Р·С‹РІР° РіРѕСЂРѕРґР°
 	$scope.getLocation = function () {
 
-		// находим выбранный ранее город
+		// РЅР°С…РѕРґРёРј РІС‹Р±СЂР°РЅРЅС‹Р№ СЂР°РЅРµРµ РіРѕСЂРѕРґ
 		for ( var i = 0; $scope.responseResult.length > i; i++ )
 			$scope.responseResult[i].formatted_address == $scope.asyncSelected ? $scope.currentCity = $scope.responseResult[i] : false;
 
-		// шаблон вызова
+		// С€Р°Р±Р»РѕРЅ РІС‹Р·РѕРІР°
 		var apiCall = 'http://api.openweathermap.org/data/2.5/weather?lat=' + $scope.currentCity.geometry.location.lat + '&lon=' + $scope.currentCity.geometry.location.lng + '&APPID=c53269f6632df35d2665dbc13b3ab454';
 		
-		// сам вызов 
+		// СЃР°Рј РІС‹Р·РѕРІ 
 		$http.get( apiCall ).then( function(res) {
 			
-			// переводим температуру в цильсии и добавляем в объект	
+			// РїРµСЂРµРІРѕРґРёРј С‚РµРјРїРµСЂР°С‚СѓСЂСѓ РІ С†РёР»СЊСЃРёРё Рё РґРѕР±Р°РІР»СЏРµРј РІ РѕР±СЉРµРєС‚	
 			$scope.currentCity.weather = { temp: Math.round( res.data.main.temp - 273,15) };
 								
 		}).then( function(){
 		
-			// создаем метку
+			// СЃРѕР·РґР°РµРј РјРµС‚РєСѓ
 			var placemark = new ymaps.Placemark([$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng], {
            			balloonContent: "Temperature: " + $scope.currentCity.weather.index + $scope.currentCity.weather.temp + '&degC',
 				hintContent: $scope.currentCity.formatted_address,
@@ -57,26 +57,26 @@ myApp.controller('weather', function($scope, $http) {
             			preset: 'twirl#violetIcon'
 			});
 		
-			map.geoObjects.add(placemark); // показываем метку на карте
-			map.setCenter([$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng]); // центрируемся на метке
+			map.geoObjects.add(placemark); // РїРѕРєР°Р·С‹РІР°РµРј РјРµС‚РєСѓ РЅР° РєР°СЂС‚Рµ
+			map.setCenter([$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng]); // С†РµРЅС‚СЂРёСЂСѓРµРјСЃСЏ РЅР° РјРµС‚РєРµ
 			
 			$scope.currentCity.placemark = placemark;
 		
 		}).then( function() {
 
-			$scope.cities.push( $scope.currentCity ); // добавляем выбранный город в массив
+			$scope.cities.push( $scope.currentCity ); // РґРѕР±Р°РІР»СЏРµРј РІС‹Р±СЂР°РЅРЅС‹Р№ РіРѕСЂРѕРґ РІ РјР°СЃСЃРёРІ
 
 		});
 	};
 
-	// функция удаления
+	// С„СѓРЅРєС†РёСЏ СѓРґР°Р»РµРЅРёСЏ
 	$scope.remove = function (city) {		
-		map.geoObjects.remove($scope.cities[$scope.cities.indexOf(city)].placemark); // удаляем метку
-		$scope.cities.splice( $scope.cities.indexOf(city), 1 ); // удаляем город из массива
+		map.geoObjects.remove($scope.cities[$scope.cities.indexOf(city)].placemark); // СѓРґР°Р»СЏРµРј РјРµС‚РєСѓ
+		$scope.cities.splice( $scope.cities.indexOf(city), 1 ); // СѓРґР°Р»СЏРµРј РіРѕСЂРѕРґ РёР· РјР°СЃСЃРёРІР°
 	};
 	
 
-	// сортировка
+	// СЃРѕСЂС‚РёСЂРѕРІРєР°
 	$scope.predicate = '';
 	$scope.reverse = false;
 
