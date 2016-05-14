@@ -2,12 +2,11 @@ var myApp = angular.module('weatherApp', ['ngAnimate', 'ui.bootstrap']);
 
 myApp.controller('weather', function($scope, $http) {
 
-
 	$scope.cities = new Array ();	// массив выбранных городов
 	
 	// создаем карту
 	var map;
-	ymaps.ready(function () { 
+	ymaps.ready(function() { 
     	map = new ymaps.Map("YMapsID", {
     		center: [44.54, 34.28],
     		zoom: 4,
@@ -24,29 +23,28 @@ myApp.controller('weather', function($scope, $http) {
 		}).then(function(response){
 			$scope.responseResult = response.data.results;
 			return response.data.results.map(function(item){
-				return item.formatted_address;
-			
+				return item.formatted_address;			
 			});
 		});
 	};
 
 	// функция вызыва города
-	$scope.getLocation = function () {
+	$scope.getLocation = function(city) {
 
 		// находим выбранный ранее город
 		for ( var i = 0; $scope.responseResult.length > i; i++ )
-			$scope.responseResult[i].formatted_address == $scope.asyncSelected ? $scope.currentCity = $scope.responseResult[i] : false;
+			$scope.responseResult[i].formatted_address == city ? $scope.currentCity = $scope.responseResult[i] : false;
 
 		// шаблон вызова
 		var apiCall = 'http://api.openweathermap.org/data/2.5/weather?lat=' + $scope.currentCity.geometry.location.lat + '&lon=' + $scope.currentCity.geometry.location.lng + '&APPID=c53269f6632df35d2665dbc13b3ab454';
 		
 		// сам вызов 
-		$http.get( apiCall ).then( function(res) {
+		$http.get(apiCall).then(function(res) {
 			
 			// переводим температуру в цильсии и добавляем в объект	
 			$scope.currentCity.weather = { temp: Math.round( res.data.main.temp - 273,15) };
 								
-		}).then( function(){
+		}).then(function(){
 		
 			// создаем метку
 			var placemark = new ymaps.Placemark([$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng], {
@@ -62,19 +60,18 @@ myApp.controller('weather', function($scope, $http) {
 			
 			$scope.currentCity.placemark = placemark;
 		
-		}).then( function() {
+		}).then(function(){
 
-			$scope.cities.push( $scope.currentCity ); // добавляем выбранный город в массив
+			$scope.cities.push($scope.currentCity); // добавляем выбранный город в массив
 
 		});
 	};
 
 	// функция удаления
-	$scope.remove = function (city) {		
+	$scope.remove = function(city) {		
 		map.geoObjects.remove($scope.cities[$scope.cities.indexOf(city)].placemark); // удаляем метку
 		$scope.cities.splice( $scope.cities.indexOf(city), 1 ); // удаляем город из массива
-	};
-	
+	};	
 
 	// сортировка
 	$scope.predicate = '';
