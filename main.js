@@ -48,7 +48,7 @@ myApp.controller('weather', function($scope, $http) {
 		
 			// создаем метку
 			var placemark = new ymaps.Placemark([$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng], {
-           			balloonContent: "Temperature: " + $scope.currentCity.weather.index + $scope.currentCity.weather.temp + '&degC',
+           			balloonContent: "Temperature: " + $scope.currentCity.weather.temp + '&degC',
 				hintContent: $scope.currentCity.formatted_address,
            			center: [$scope.currentCity.geometry.location.lat, $scope.currentCity.geometry.location.lng]
         		}, {
