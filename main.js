@@ -81,5 +81,4 @@ myApp.controller('weather', function($scope, $http) {
    		$scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
 		$scope.predicate = predicate;
 	};
-
 })
