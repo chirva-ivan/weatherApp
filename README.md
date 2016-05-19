@@ -6,6 +6,7 @@ Any city response creates a placemark of city's coordinates on the map and adds 
 - JavaScript
 - Angular
 - Bootstrap
+- Gulp
 
 ##API calls in use
 + Yandex Map API
